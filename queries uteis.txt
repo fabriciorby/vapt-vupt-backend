@@ -1,0 +1,13 @@
+db.smll_index.drop()
+
+db.smll_cotacoes.drop()
+
+db.smll_index.find()
+
+db.smll_cotacoes.find().pretty()
+
+db.smll_cotacoes.find({}, {data: 0})
+
+db.smll_cotacoes.find({data: {$not: {$eq: {}} } }, {_id: 0, data: 0} )
+
+db.smll_cotacoes.find({data: {$eq: {}} }, {_id: 0, data: 0} )

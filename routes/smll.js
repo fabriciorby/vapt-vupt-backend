@@ -17,8 +17,6 @@ const sleep = (ms) => {
 
 (async () => {
 
-    const db = await loadDB();
-
     await tabletojson.convertUrl(smllURL, (table) => {
         table = table[0];
         table.shift();
@@ -29,6 +27,8 @@ const sleep = (ms) => {
             }
         ));
     });
+
+    let db = await loadDB();
 
     let col = await db.collection('smll_index');
 
@@ -45,7 +45,7 @@ const sleep = (ms) => {
     Promise.all(insereSMLL);
 
     col = await db.collection('smll_cotacoes');
-    col.createIndex({papel: 1}, {unique: true});
+    col.createIndex({ papel: 1 }, { unique: true });
 
     const insereCotacoes = smllList.map(
         async item => {
@@ -72,8 +72,12 @@ const sleep = (ms) => {
                     const result = await alphaVantageAPI(timeRange.weekly, item.papel);
                     if (Object.entries(result.data).length != 0) {
                         console.log(result.papel);
-                        const isUpserted = await col.updateOne({ papel: result.papel} , { $set: result }, { upsert: true })
-                        if (isUpserted.upsertedId) { console.log(await col.findOne({ _id: isUpserted.upsertedId._id }, { data: 0 })) }
+                        if (await col.findOne({papel: result.papel, data: result.data})) {
+                            console.log(result.papel + 'já está atualizado!');
+                        } else {
+                            const isUpserted = await col.updateOne({ papel: result.papel }, { $set: result }, { upsert: true })
+                            if (isUpserted.upsertedId) { console.log(await col.findOne({ _id: isUpserted.upsertedId._id }, { data: 0 })) }
+                        }
                     }
                 }
                 catch (err) { console.error(err) }
@@ -88,21 +92,21 @@ const sleep = (ms) => {
 
         console.log('tentando de novo...')
     } while (listaObjetoVazio.length != 0);
-    // TODO APAGAR ESSA MERDA E INTEGRAR COM UM MONGO DB
 
 })();
 
-const getSemanal = async () => {
-    return await smllList.map(async item => await alphaVantageAPI(timeRange.weekly, item.codigo + '.SA'))
-}
+const getSemanal = async () => await smllList.map(async item => await alphaVantageAPI(timeRange.weekly, item.codigo + '.SA'))
 
-router.get('/semanal', (req, res, next) => {
-    Promise.all(smllList.map(item => alphaVantageAPI(timeRange.weekly, item.codigo + '.SA')))
-        .then(data => res.status(200).send(data));
+
+router.get('/semanal', async (req, res, next) => {
+    const db = await loadDB();
+    const col = await db.collection('smll_cotacoes');
+    const data = await col.find({}, {_id: 0}).toArray();
+    res.status(200).send(data);
 });
 
 router.get('/diario', async (req, res, next) => {
-    let data = await alphaVantageAPI(timeRange.daily, 'GOLL4.SA');
+    const data = await alphaVantageAPI(timeRange.daily, 'GOLL4.SA');
     res.status(200).send(data);
 });
 
