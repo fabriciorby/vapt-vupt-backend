@@ -62,6 +62,10 @@ const formata = (response) => {
         return {};
     }
 
+    if (data['Error Message']) {
+        throw new Error ('API problem.')
+    }
+
     let dateProperties = Object.getOwnPropertyNames(data[seriesProperty]);
     dateProperties.sort((a, b) => new Date(b) - new Date(a))
 

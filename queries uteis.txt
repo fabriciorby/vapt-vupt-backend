@@ -11,3 +11,8 @@ db.smll_cotacoes.find({}, {data: 0})
 db.smll_cotacoes.find({data: {$not: {$eq: {}} } }, {_id: 0, data: 0} )
 
 db.smll_cotacoes.find({data: {$eq: {}} }, {_id: 0, data: 0} )
+
+db.smll_cotacoes.find({papel: 'BIDI4.SA'}, {data: 0})
+
+db.smll_cotacoes.find({papel: 'BIDI4.SA'})
+
