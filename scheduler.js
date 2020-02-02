@@ -18,8 +18,8 @@ const myScheduler = {
         console.log('Scheduler initialized.')
     },
     syncNow: () => {
-        // doSyncSmallCapsIntoDB();
-        console.log('sync agora men');
+        doSyncSmallCapsIntoDB();
+        console.log('Sync triggered.')
     }
 }
 

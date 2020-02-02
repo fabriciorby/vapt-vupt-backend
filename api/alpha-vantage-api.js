@@ -10,11 +10,8 @@ const timeRange = {
 const outputCompact = 'compact'
 const outputFull = 'full'
 
-// const apikey = 'KVFMKO6TG85HEP8D';
-const apikey = 'KRJBADZO6ESULFU4';
-
-
-const baseURL = 'https://www.alphavantage.co/';
+const apikey = process.env.ALPHAVANTAGE_APIKEY;
+const baseURL = process.env.ALPHAVANTAGE_URL;
 
 const createParams = (timeRange, symbol) => {
     return {
@@ -37,17 +34,10 @@ const alphaVantageAPI = async (timeRange, symbol) => {
     let data;
     await axios.get('/query', createRequest(timeRange, symbol))
         .then((response) => {
-            // console.log(response.data);
-            // console.log(response.status);
-            // console.log(response.statusText);
-            // console.log(response.headers);
-            // console.log(response.config);
-
             data = {
                 papel: symbol,
                 data: formata(response)
             }
-
         });
     return data;
 }
@@ -63,7 +53,7 @@ const formata = (response) => {
     }
 
     if (data['Error Message']) {
-        throw new Error ('API problem.')
+        throw new Error('API problem.')
     }
 
     let dateProperties = Object.getOwnPropertyNames(data[seriesProperty]);

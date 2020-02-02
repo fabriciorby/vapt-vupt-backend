@@ -3,7 +3,7 @@ const { alphaVantageAPI, timeRange } = require('./api/alpha-vantage-api');
 const { convertUrl } = require('tabletojson');
 const loadDB = require('./db');
 
-const smallCapsIndexURL = 'http://bvmf.bmfbovespa.com.br/indices/ResumoCarteiraTeorica.aspx?Indice=SMLL&idioma=pt-br';
+const smallCapsIndexURL = process.env.SMALLCAPSINDEX_URL;
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
