@@ -1,4 +1,5 @@
 const schedule = require('node-schedule');
+const doSyncSmallCapsIntoDB = require('./syncDb');
 
 const scheduleSyncDB = () => {
     schedule.scheduleJob({ hour: 0, minute: 0, dayOfWeek: 6 }, async () => {
