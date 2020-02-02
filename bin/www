@@ -19,7 +19,7 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-if (argv.sync) myScheduler.syncNow();
+if (argv.sync || process.env.SYNC_DB == 'TRUE') myScheduler.syncNow();
 myScheduler.start();
 
 /**
