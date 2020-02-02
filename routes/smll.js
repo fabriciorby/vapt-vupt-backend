@@ -28,7 +28,8 @@ router.get('/all', async (req, res, next) => {
 router.get('/all/code', async (req, res, next) => {
     const db = await loadDB();
     const col = await db.collection('smll_index');
-    const data = await col.find({}).project({ _id: 0, nome: 0 }).toArray().map(item => item.codigo).sort();
+    const data = (await col.find({}).project({ _id: 0, nome: 0 }).toArray())
+                    .map(item => item.codigo).sort();
     res.status(200).send(data);
 })
 

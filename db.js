@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017';
-const dbName = 'vapt-vupt';
+const url = process.env.DB_URL;
+const dbName = process.env.DB_NAME;
 
 let db;
 
